@@ -3,7 +3,7 @@ set -ex
 export VERSION=$1
 export RELEASE_NAME=`basename $GITHUB_REPO`
 
-## Create Release
+## Create GitHub release with tag information
  export RELEASE_URL=$(curl -H\
 "Authorization: token $GITHUB_TOKEN"\
  -d "{\"tag_name\": \"$VERSION\", \"target_commitsh\": \"$VERSION\", \"name\": \"$VERSION\", \"body\": \"Release $VERSION\" }"\
@@ -13,13 +13,14 @@ export RELEASE_NAME=`basename $GITHUB_REPO`
 
 
 
-## Build TF modules that require source building
+## Package Terraform modules into a distributable zip file
 function create_zip_file() {
-
   BUILD_DIR=/tmp/${RELEASE_NAME}
   DESTINATION_DIR=${PWD}/dist
   rm -rf ${DESTINATION_DIR}
   mkdir -p ${BUILD_DIR} ${DESTINATION_DIR}
+  
+  # Copy all infrastructure files for distribution
   cp -r infrastructure/*  ${BUILD_DIR}
 
   cd ${BUILD_DIR}
@@ -31,13 +32,13 @@ function create_zip_file() {
 
 
 
-#### Release package
+#### Build and upload release package
 create_zip_file
 
-### Post the release
+### Upload the zipped infrastructure files to the GitHub release
 curl -X POST -H "Authorization: token $GITHUB_TOKEN" --data-binary "@${RELEASE_NAME}.zip" -H "Content-type: application/octet-stream" $RELEASE_URL/assets?name=${RELEASE_NAME}.zip
 
-## Create Release for dmrpp docker image
+## Create additional release for docker image (if configured)
 curl -H\
   "Authorization: token $GITHUB_TOKEN"\
    -d "{\"tag_name\": \"$VERSION\", \"target_commitsh\": \"$VERSION\", \"name\": \"$VERSION\", \"body\": \"Release $VERSION https://ghrcdaac.github.io/dmrpp-generator\" }"\
