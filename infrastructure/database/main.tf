@@ -96,12 +96,12 @@ resource "kubernetes_deployment_v1" "postgres" {
 
           resources {
             requests = {
-              memory = "256Mi"
-              cpu    = "250m"
+              memory = var.temporal_db_memory_request
+              cpu    = var.temporal_db_cpu_request
             }
             limits = {
-              memory = "512Mi"
-              cpu    = "500m"
+              memory = var.temporal_db_memory_limit
+              cpu    = var.temporal_db_cpu_limit
             }
           }
         }

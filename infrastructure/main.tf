@@ -20,6 +20,11 @@ module "database" {
   temporal_db_user            = var.temporal_db_user
   temporal_db_password        = var.temporal_db_password
   storage_class_name          = var.storage_class_name
+  temporal_db_cpu_request = var.temporal_db_cpu_request
+  temporal_db_cpu_limit = var.temporal_db_cpu_limit
+  temporal_db_memory_limit = var.temporal_db_memory_limit
+  temporal_db_memory_request = var.temporal_db_memory_request
+
 }
 
 
