@@ -1,0 +1,34 @@
+server:
+  config:
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            pluginName: ${db_plugin_name}
+            driverName: ${db_driver_name}
+            databaseName: ${temporal_db_name}
+            connectAddr: "${temporal_db_host}:${temporal_db_port}"
+            connectProtocol: "tcp"
+            user: ${temporal_db_user}
+            password: "${temporal_db_password}"
+            maxConns: 80
+            maxConnLifetime: "1h"
+        visibility:
+          sql:
+            pluginName: ${db_plugin_name}
+            driverName: ${db_driver_name}
+            databaseName: ${temporal_visibility_db_name}
+            connectAddr: "${temporal_db_host}:${temporal_db_port}"
+            connectProtocol: "tcp"
+            user: ${temporal_db_user}
+            password: "${temporal_db_password}"
+            maxConns: 80
+            maxConnLifetime: "1h"
+
+# Explicitly disable Cassandra
+cassandra:
+  enabled: false
+

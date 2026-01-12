@@ -1,0 +1,75 @@
+variable "namespace" {
+  description = "temporalio namespace"
+  default     = "temporal"
+}
+
+variable "temporal_chart_version" {
+  description = "value of temporal chart version"
+  default     = "1.0.0-rc.1"
+}
+
+variable "timeout_seconds" {
+  description = "value of timeout seconds"
+  default     = "900"
+}
+
+
+variable "db_plugin_name" {
+  description = "value of db plugin name for temporal"
+  default     = "postgres12"
+
+}
+
+variable "db_driver_name" {
+  description = "value of db driver name for temporal"
+  default     = "postgres12"
+
+}
+
+
+
+variable "temporal_db_name" {
+  description = "value of temporal db name for temporal"
+  default     = "temporal"
+
+}
+
+variable "temporal_db_host" {
+  description = "value of temporal db host for temporal"
+  default     = "localhost"
+
+}
+
+variable "temporal_db_port" {
+  description = "temporal db port"
+  default     = "5432"
+
+}
+
+variable "temporal_db_user" {
+  description = "value of temporal db user for temporal"
+  default     = "temporal"
+
+}
+
+variable "temporal_db_password" {
+  description = "value of temporal db password for temporal"
+  default     = "temporal1234"
+  sensitive   = true
+
+}
+
+
+variable "temporal_visibility_db_name" {
+  description = "value of temporal visibility db name for temporal"
+  default     = "visibility"
+
+}
+
+
+variable "storage_class_name" {
+  description = "value of storage class name for temporal database"
+  default     = "standard"
+}
+
+
