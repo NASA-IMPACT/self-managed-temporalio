@@ -65,7 +65,7 @@ resource "helm_release" "temporalio" {
 
 # Initialize Temporal by registering the default namespace
 resource "kubernetes_job_v1" "temporal_namespace" {
-  depends_on = [helm_release.temperolaio]
+  depends_on = [helm_release.temporalio]
 
   metadata {
     name      = "temporal-namespace-setup"
