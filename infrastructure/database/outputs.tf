@@ -1,6 +1,7 @@
 output "postgres_service_url" {
-  value = "${local.temporal_db_service_name}.${var.namespace}.svc.cluster.local"
+  value = "${kubernetes_service_v1.postgres.metadata[0].name}.${var.namespace}.svc.cluster.local" 
 }
+
 
 output "postgres_service_port" {
   value = 5432

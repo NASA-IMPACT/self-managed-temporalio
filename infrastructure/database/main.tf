@@ -1,4 +1,5 @@
-resource "kubernetes_deployment" "postgres" {
+# PostgreSQL deployment for TemporalIO database
+resource "kubernetes_deployment_v1" "postgres" {
   metadata {
     name      = "${var.temporal_db_name}-db-deployment"
     namespace = var.namespace
@@ -26,7 +27,7 @@ resource "kubernetes_deployment" "postgres" {
       spec {
         container {
           name  = "postgres"
-          image = "postgres:16"
+          image = "postgres:16" # Using PostgreSQL 16 for latest features and performance
 
           env {
             name = "POSTGRES_USER"
@@ -73,6 +74,7 @@ resource "kubernetes_deployment" "postgres" {
             mount_path = "/docker-entrypoint-initdb.d"
           }
 
+          # Health checks to ensure PostgreSQL is running and ready to accept connections
           liveness_probe {
             exec {
               command = ["pg_isready", "-U", var.temporal_db_user]
@@ -94,12 +96,12 @@ resource "kubernetes_deployment" "postgres" {
 
           resources {
             requests = {
-              memory = "256Mi"
-              cpu    = "250m"
+              memory = var.temporal_db_memory_request
+              cpu    = var.temporal_db_cpu_request
             }
             limits = {
-              memory = "512Mi"
-              cpu    = "500m"
+              memory = var.temporal_db_memory_limit
+              cpu    = var.temporal_db_cpu_limit
             }
           }
         }
@@ -114,7 +116,7 @@ resource "kubernetes_deployment" "postgres" {
         volume {
           name = "init-script"
           config_map {
-            name = kubernetes_config_map_v1.postgres_init.metadata[0].name
+            name = kubernetes_config_map_v1.postgres_init.metadata[0].name # Database initialization scripts
           }
         }
       }
@@ -122,16 +124,14 @@ resource "kubernetes_deployment" "postgres" {
   }
 }
 
-locals {
-  temporal_db_service_name = "${var.temporal_db_name}-db-service"
-}
 
-resource "kubernetes_service" "postgres" {
+# Kubernetes service to expose PostgreSQL within the cluster
+resource "kubernetes_service_v1" "postgres" {
   metadata {
-    name      = local.temporal_db_service_name
+    name      = "${var.temporal_db_name}-db-service"
     namespace = var.namespace
     labels = {
-      app = local.temporal_db_service_name
+      app = "${var.temporal_db_name}-db-service"
     }
   }
 

@@ -1,4 +1,5 @@
 
+# Create a dedicated Kubernetes namespace for TemporalIO components
 resource "kubernetes_namespace_v1" "temporalio-ns" {
   metadata {
     name = var.namespace
@@ -9,6 +10,7 @@ resource "kubernetes_namespace_v1" "temporalio-ns" {
 
 
 
+# Deploy PostgreSQL database module for TemporalIO
 module "database" {
   source                      = "./database"
   temporal_db_name            = var.temporal_db_name
@@ -18,12 +20,16 @@ module "database" {
   temporal_db_user            = var.temporal_db_user
   temporal_db_password        = var.temporal_db_password
   storage_class_name          = var.storage_class_name
-
+  temporal_db_cpu_request = var.temporal_db_cpu_request
+  temporal_db_cpu_limit = var.temporal_db_cpu_limit
+  temporal_db_memory_limit = var.temporal_db_memory_limit
+  temporal_db_memory_request = var.temporal_db_memory_request
 
 }
 
 
 
+# Generate dynamic Helm values file with database connection details
 resource "local_file" "temporalio_values" {
   filename = "${path.root}/templates/values.yaml"
   content = templatefile("${path.root}/templates/values.yaml.tmpl", {
@@ -35,11 +41,10 @@ resource "local_file" "temporalio_values" {
     temporal_db_user            = var.temporal_db_user
     temporal_db_password        = var.temporal_db_password
     temporal_visibility_db_name = var.temporal_visibility_db_name
-
-
   })
 }
 
+# Deploy TemporalIO using the official Helm chart
 resource "helm_release" "temperolaio" {
   depends_on = [module.database]
   namespace  = kubernetes_namespace_v1.temporalio-ns.metadata.0.name
@@ -51,14 +56,13 @@ resource "helm_release" "temperolaio" {
   # Helm chart deployment can sometimes take longer than the default 5 minutes
   timeout = var.timeout_seconds
 
-  # If values file specified by the var.values_file input variable exists then apply the values from this file
-  # else apply the default values from the chart
+  # Apply dynamically generated values with database configuration
   values = [local_file.temporalio_values.content]
-
 }
 
 
 
+# Initialize Temporal by registering the default namespace
 resource "kubernetes_job_v1" "temporal_namespace" {
   depends_on = [helm_release.temperolaio]
 
@@ -95,4 +99,5 @@ resource "kubernetes_job_v1" "temporal_namespace" {
     update = "5m"
   }
 }
+
 

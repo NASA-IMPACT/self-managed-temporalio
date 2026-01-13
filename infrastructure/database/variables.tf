@@ -31,5 +31,23 @@ variable "temporal_db_password" {
 
 variable "storage_class_name" {
   description = "value of storage class name for temporal database"
+}
 
+variable "temporal_db_cpu_request" {
+    description = "value of temporal db cpu request for temporal"
+  
+}
+variable "temporal_db_memory_request" {
+    description = "value of temporal db memory request for temporal"
+  
+}
+
+variable "temporal_db_memory_limit" {
+    description = "value of temporal db memory limit for temporal"
+  
+}
+
+variable "temporal_db_cpu_limit" {
+    description = "value of temporal db cpu limit for temporal"
+  
 }
