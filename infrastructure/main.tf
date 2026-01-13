@@ -31,7 +31,7 @@ module "database" {
 
 # Generate dynamic Helm values file with database connection details
 resource "local_file" "temporalio_values" {
-  filename = "${path.root}/templates/values.yaml"
+  filename = "${path.module}/templates/values.yaml"
   content = templatefile("${path.root}/templates/values.yaml.tmpl", {
     db_plugin_name              = var.db_plugin_name
     db_driver_name              = var.db_driver_name
