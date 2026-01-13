@@ -13,7 +13,7 @@ jobs:
             - name: Get tag version
               id: tag_name
               run: |
-                    VERSION=$(grep . /versions | tail -1)
+                    VERSION=$(grep . ./versions | tail -1)
                     echo "Current version: $VERSION"
                     echo "SOURCE_TAG=${VERSION}" >> $GITHUB_OUTPUT
                     
