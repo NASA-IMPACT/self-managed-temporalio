@@ -31,7 +31,7 @@ server:
 # Explicitly disable Cassandra
 cassandra:
   enabled: false
-%{ if use_traefik_ingress && domain_name }
+%{ if use_traefik_ingress && length(domain_name) > 0 }
 web:
   ingress:
     enabled: true
