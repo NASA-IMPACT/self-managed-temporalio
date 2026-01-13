@@ -31,4 +31,21 @@ server:
 # Explicitly disable Cassandra
 cassandra:
   enabled: false
-
+%{ if use_traefik_ingress && domain_name }
+web:
+  ingress:
+    enabled: true
+    className: traefik
+    annotations:
+      kubernetes.io/ingress.class: traefik
+      traefik.frontend.rule.type: PathPrefix
+    hosts:
+      - "${domain_name}/temporal"
+    tls:
+      - secretName: ingress-tls
+        hosts:
+          - ${domain_name}
+  additionalEnv:
+    - name: TEMPORAL_UI_PUBLIC_PATH
+      value: "/temporal"
+%{ endif }

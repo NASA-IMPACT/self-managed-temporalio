@@ -96,3 +96,12 @@ variable "temporal_db_cpu_limit" {
     default = "512Mi"
   
 }
+
+variable "use_traefik_ingress" {
+    description = "Wither to use traefik ingress controller or not"
+    default = true
+  
+}
+variable "domain_name" {
+  type = string
+}

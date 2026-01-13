@@ -32,7 +32,7 @@ module "database" {
 # Generate dynamic Helm values file with database connection details
 resource "local_file" "temporalio_values" {
   filename = "${path.module}/templates/values.yaml"
-  content = templatefile("${path.root}/templates/values.yaml.tmpl", {
+  content = templatefile("${path.module}/templates/values.yaml.tmpl", {
     db_plugin_name              = var.db_plugin_name
     db_driver_name              = var.db_driver_name
     temporal_db_name            = var.temporal_db_name
@@ -41,6 +41,8 @@ resource "local_file" "temporalio_values" {
     temporal_db_user            = var.temporal_db_user
     temporal_db_password        = var.temporal_db_password
     temporal_visibility_db_name = var.temporal_visibility_db_name
+    use_traefik_ingress = var.use_traefik_ingress
+    domain_name = var.domain_name
   })
 }
 
