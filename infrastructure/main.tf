@@ -47,7 +47,7 @@ resource "local_file" "temporalio_values" {
 }
 
 # Deploy TemporalIO using the official Helm chart
-resource "helm_release" "temperolaio" {
+resource "helm_release" "temporalio" {
   depends_on = [module.database]
   namespace  = kubernetes_namespace_v1.temporalio-ns.metadata.0.name
   name       = "temporal"
@@ -61,7 +61,6 @@ resource "helm_release" "temperolaio" {
   # Apply dynamically generated values with database configuration
   values = [local_file.temporalio_values.content]
 }
-
 
 
 # Initialize Temporal by registering the default namespace
