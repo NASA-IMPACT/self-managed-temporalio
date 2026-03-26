@@ -73,3 +73,26 @@ variable "storage_class_name" {
 }
 
 
+
+variable "temporal_db_cpu_request" {
+    description = "value of temporal db cpu request for temporal"
+    default = "250m"
+  
+}
+variable "temporal_db_memory_request" {
+    description = "value of temporal db memory request for temporal"
+    default = "256Mi"
+  
+}
+
+variable "temporal_db_memory_limit" {
+    description = "value of temporal db memory limit for temporal"
+    default = "500m"
+  
+}
+
+variable "temporal_db_cpu_limit" {
+    description = "value of temporal db cpu limit for temporal"
+    default = "512Mi"
+  
+}
