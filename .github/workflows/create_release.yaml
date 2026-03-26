@@ -10,12 +10,12 @@ permissions:
   contents: write
 
 jobs:
-  bump-patch:
+  build-create-release:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -54,11 +54,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ steps.repo_name.outputs.REPOSITORY_NAME }}
-
-      - name: Create GitHub Release
-        run: |
-          gh release create ${{ steps.bump.outputs.new_tag }} \
-            --title "Release ${{ steps.bump.outputs.new_tag }}" \
-            --notes "Automated patch release"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
