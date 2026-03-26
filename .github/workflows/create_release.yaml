@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  bump-patch:
+  build-create-release:
     runs-on: ubuntu-latest
 
     steps:
