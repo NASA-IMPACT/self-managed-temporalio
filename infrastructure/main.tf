@@ -80,10 +80,10 @@ resource "kubernetes_job_v1" "temporal_namespace" {
         container {
           name    = "setup"
           image   = "temporalio/admin-tools:latest"
-          command = ["tctl", "namespace", "register", "default", "--retention", "7"]
+          command = ["tctl", "namespace", "register", "default", "--retention", "7d"]
 
           env {
-            name  = "TEMPORAL_CLI_ADDRESS"
+            name  = "TEMPORAL_ADDRESS"
             value = "temporal-frontend:7233"
           }
         }
