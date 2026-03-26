@@ -37,12 +37,3 @@ create_zip_file
 
 ### Upload the zipped infrastructure files to the GitHub release
 curl -X POST -H "Authorization: token $GITHUB_TOKEN" --data-binary "@${RELEASE_NAME}.zip" -H "Content-type: application/octet-stream" $RELEASE_URL/assets?name=${RELEASE_NAME}.zip
-
-## Create additional release for docker image (if configured)
-curl -H\
-  "Authorization: token $GITHUB_TOKEN"\
-   -d "{\"tag_name\": \"$VERSION\", \"target_commitsh\": \"$VERSION\", \"name\": \"$VERSION\", \"body\": \"Release $VERSION https://ghrcdaac.github.io/dmrpp-generator\" }"\
-   -H "Content-Type: application/json"\
-   -X POST\
-   https://api.github.com/repos/$GUTHUB_DOCKER_IMAGE/releases
-   
