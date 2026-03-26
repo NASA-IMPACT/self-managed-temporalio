@@ -31,8 +31,8 @@ module "database" {
 
 # Generate dynamic Helm values file with database connection details
 resource "local_file" "temporalio_values" {
-  filename = "${path.root}/templates/values.yaml"
-  content = templatefile("${path.root}/templates/values.yaml.tmpl", {
+  filename = "${path.module}/templates/values.yaml"
+  content = templatefile("${path.module}/templates/values.yaml.tmpl", {
     db_plugin_name              = var.db_plugin_name
     db_driver_name              = var.db_driver_name
     temporal_db_name            = var.temporal_db_name
@@ -41,11 +41,13 @@ resource "local_file" "temporalio_values" {
     temporal_db_user            = var.temporal_db_user
     temporal_db_password        = var.temporal_db_password
     temporal_visibility_db_name = var.temporal_visibility_db_name
+    use_traefik_ingress = var.use_traefik_ingress
+    domain_name = var.domain_name
   })
 }
 
 # Deploy TemporalIO using the official Helm chart
-resource "helm_release" "temperolaio" {
+resource "helm_release" "temporalio" {
   depends_on = [module.database]
   namespace  = kubernetes_namespace_v1.temporalio-ns.metadata.0.name
   name       = "temporal"
@@ -61,10 +63,9 @@ resource "helm_release" "temperolaio" {
 }
 
 
-
 # Initialize Temporal by registering the default namespace
 resource "kubernetes_job_v1" "temporal_namespace" {
-  depends_on = [helm_release.temperolaio]
+  depends_on = [helm_release.temporalio]
 
   metadata {
     name      = "temporal-namespace-setup"
