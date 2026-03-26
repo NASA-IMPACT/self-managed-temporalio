@@ -1,4 +1,4 @@
-name: Bump Patch and Create Release
+name: Create Release
 
 on:
   push:
@@ -43,6 +43,17 @@ jobs:
         run: |
           git tag ${{ steps.bump.outputs.new_tag }}
           git push origin ${{ steps.bump.outputs.new_tag }}
+      
+      - name: Get repo name
+        id: repo_name
+        run: echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | sed -e "s/:refs//")" >> $GITHUB_OUTPUT
+
+      - name: Build a release
+        run: |
+          bash create_release.sh ${{ steps.bump.outputs.new_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ steps.repo_name.outputs.REPOSITORY_NAME }}
 
       - name: Create GitHub Release
         run: |
