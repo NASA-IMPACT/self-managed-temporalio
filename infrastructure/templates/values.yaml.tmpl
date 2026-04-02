@@ -40,7 +40,7 @@ web:
       kubernetes.io/ingress.class: traefik
       traefik.frontend.rule.type: PathPrefix
     hosts:
-      - "${domain_name}/temporal"
+      - "${domain_name}/temporal/"
     tls:
       - secretName: ingress-tls
         hosts:
