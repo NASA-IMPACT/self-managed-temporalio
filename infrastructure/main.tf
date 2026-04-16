@@ -6,10 +6,6 @@ resource "kubernetes_namespace_v1" "temporalio-ns" {
   }
 }
 
-
-
-
-
 # Deploy PostgreSQL database module for TemporalIO
 module "database" {
   source                      = "./database"
@@ -60,6 +56,14 @@ resource "helm_release" "temporalio" {
 
   # Apply dynamically generated values with database configuration
   values = [local_file.temporalio_values.content]
+}
+
+
+resource "local_file" "temporalio_ingress" {
+  filename = "${path.module}/templates/ingress.yaml"
+  content = templatefile("${path.module}/templates/ingress.yaml.tmpl", {
+    domain_name = var.domain_name
+  })
 }
 
 
