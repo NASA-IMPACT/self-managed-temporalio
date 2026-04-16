@@ -1,0 +1,24 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: temporal-frontend-grpc
+  namespace: temporal
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`${domain_name}`) && PathPrefix(`/temporal/`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: temporal-web
+          port: 8080
+    - match: Host(`${domain_name}`)
+      kind: Rule
+      priority: 1
+      services:
+        - name: temporal-frontend
+          port: 7233
+          scheme: h2c
+  tls:
+    secretName: ingress-tls
